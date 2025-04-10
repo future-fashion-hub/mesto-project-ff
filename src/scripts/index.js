@@ -1,7 +1,7 @@
 import '../pages/index.css';
 import { initialCards } from './cards.js';
 import { createCard, likeCard, removeCard } from './card.js';
-import { openImage, openPopup, closePopup, closeOverlay} from './modal.js';
+import { openPopup, closePopup, closeOverlay} from './modal.js';
 
 
 const cardList = document.querySelector('.places__list'); 
@@ -11,32 +11,41 @@ const editCloseButton = editPopup.querySelector('.popup__close');
 const addPopup = document.querySelector('.popup_type_new-card');
 const addButton = document.querySelector('.profile__add-button');
 const addCloseButton = addPopup.querySelector('.popup__close');
-export const imageTypePopup = document.querySelector('.popup_type_image');
+const imageTypePopup = document.querySelector('.popup_type_image');
 const imageCloseButton = imageTypePopup.querySelector('.popup__close');
-const formElement = document.querySelector('.popup__form');
-const nameInput = formElement.querySelector('.popup__input_type_name');
-const jobInput = formElement.querySelector('.popup__input_type_description');
+const imagePopup = document.querySelector('.popup__image');
+const formEditProfile = document.querySelector('form[name="edit-profile"]');
+const nameInput = formEditProfile.querySelector('.popup__input_type_name');
+const jobInput = formEditProfile.querySelector('.popup__input_type_description');
 const formNewPlace = document.querySelector('form[name="new-place"]')
 const cardNameInput = formNewPlace.querySelector('.popup__input_type_card-name');
 const cardLinkInput = formNewPlace.querySelector('.popup__input_type_url');
+const captionPopup = document.querySelector('.popup__caption');
+const newCardsArray = [];
 
-function handleFormSubmit(evt) {
+function handleFormEditProfileSubmit(evt) {
   evt.preventDefault(); 
   document.querySelector('.profile__title').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
   closePopup(editPopup);
 }
 
-formElement.addEventListener('submit', handleFormSubmit); 
+formEditProfile.addEventListener('submit', handleFormEditProfileSubmit); 
 
 function handleFormAddCardSubmit(evt) {
   evt.preventDefault();
-  initialCards.unshift({name: cardNameInput.value, link: cardLinkInput.value});
-  const newPlaceCard = createCard(initialCards[0], removeCard, likeCard, openImage);
+  newCardsArray.unshift({name: cardNameInput.value, link: cardLinkInput.value});
+  const newPlaceCard = createCard(newCardsArray[0], removeCard, likeCard, openImage);
   cardList.prepend(newPlaceCard);
   closePopup(addPopup);
-  cardNameInput.value = '';
-  cardLinkInput.value = '';
+  formNewPlace.reset();
+}
+
+function openImage (evt) {
+  openPopup(imageTypePopup)
+  imagePopup.src = evt.target.src;
+  imagePopup.alt = evt.target.alt;
+  captionPopup.textContent = evt.target.alt;
 }
 
 formNewPlace.addEventListener('submit', handleFormAddCardSubmit)
@@ -47,12 +56,12 @@ initialCards.forEach(item => {
 }); 
 
 editButton.addEventListener('click', () => {
-  openPopup(editPopup)
+  openPopup(editPopup);
+  nameInput.value = document.querySelector('.profile__title').textContent;
+  jobInput.value = document.querySelector('.profile__description').textContent;
 })
 
 editCloseButton.addEventListener('click', () => {
-  nameInput.value = document.querySelector('.profile__title').textContent;
-  jobInput.value = document.querySelector('.profile__description').textContent;
   closePopup(editPopup)
 })
 
@@ -68,17 +77,8 @@ imageCloseButton.addEventListener('click', () => {
   closePopup(imageTypePopup)
 })
 
-editPopup.addEventListener('click', (evt) => {
-  closeOverlay(editPopup, evt)
-})
+editPopup.addEventListener('click', closeOverlay)
 
-addPopup.addEventListener('click', (evt) => {
-  closeOverlay(addPopup, evt)
-})
+addPopup.addEventListener('click', closeOverlay)
 
-imageTypePopup.addEventListener('click', (evt) => {
-  closeOverlay(imageTypePopup, evt)
-})
-
-nameInput.value = document.querySelector('.profile__title').textContent;
-jobInput.value = document.querySelector('.profile__description').textContent;
+imageTypePopup.addEventListener('click', closeOverlay)
