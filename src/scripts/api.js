@@ -5,18 +5,19 @@ const config = {
   }
 }
 
+const handleResponse = (res) => {
+  if (!res.ok) {
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+  return res.json();
+}
 export const getUserInformation = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: {
       authorization: config.headers.authorization
     }
   })
-  .then((res) => {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status}`); 
-    }
-    return res.json();
-  })
+  .then(handleResponse)
 }
 
 export const getCardList = () => {
@@ -25,12 +26,7 @@ export const getCardList = () => {
       authorization: config.headers.authorization
     }
   })
-  .then((res) => {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  })
+  .then(handleResponse)
 }
 
 export const uploadUserInformation = (profileName, profileAbout) => {
@@ -45,12 +41,7 @@ export const uploadUserInformation = (profileName, profileAbout) => {
       about: profileAbout
     })
   })
-  .then((res) => {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  })
+  .then(handleResponse)
 }
 
 export const uploadCardList = (cardName, cardLink) => {
@@ -65,12 +56,7 @@ export const uploadCardList = (cardName, cardLink) => {
       link: cardLink
     })
   })
-  .then((res) => {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  })
+  .then(handleResponse)
 }
 
 export const deleteCardApi = (cardID) => {
@@ -80,12 +66,7 @@ export const deleteCardApi = (cardID) => {
       authorization: config.headers.authorization,
     }
   })
-  .then((res) => {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  })
+  .then(handleResponse)
 }
 
 export const setLikeApi = (cardID, isLiked) => {
@@ -95,12 +76,7 @@ export const setLikeApi = (cardID, isLiked) => {
       authorization: config.headers.authorization,
     }
   })
-  .then((res) => {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  })
+  .then(handleResponse)
 }
 
 export const uploadUserAvatar = (profileAvatar) => {
@@ -114,10 +90,5 @@ export const uploadUserAvatar = (profileAvatar) => {
       avatar: profileAvatar
     })
   })
-  .then((res) => {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  })
+  .then(handleResponse)
 }
